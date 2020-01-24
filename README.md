@@ -5,7 +5,7 @@ This project attempts to implement the seven Dynamic Set Operators using a Binar
 
 |Variable Name|Type           |Description  |
 |-------------|:-------------:|------------:|
-|key          |String         |             | 
+|key          |String         |Word being stored, it is case sensitive| 
 |count        |Integer        |Counts the frequency that the *key* has been inserted|
 |leftChild    |Node pointer   |Points to the left children node| 
 
