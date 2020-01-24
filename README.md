@@ -3,7 +3,9 @@ This project attempts to implement the seven Dynamic Set Operators using a Binar
 
 ### Node
 The node will contain the following information:
-*
-
-a string (the "key"), an integer (to count the number of times the *key* has been seen)
+|Variable Name|Type           |Description  |
+|-------------|---------------|-------------|
+|key          |String         |             | 
+|count        |Integer        |Counts the frequency that the *key* has been inserted|
+|leftChild    |Node pointer   |Points to the left children node| 
 
