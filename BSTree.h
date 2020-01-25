@@ -24,15 +24,16 @@ private:
         }   //End of constructor
     };  //End of Node struct
     Node* root; //Root, or beginning, of the tree
-    Node* find(std::string word);
+    Node* find      (std::string word);
+    Node* maximum   ();
 
 public:
     BSTree();                       //Constructor
     ~BSTree();                      //Destructor, as C++ does not have it's own garbage collection
     void search(std::string word);  //Search functions, calls private find private function and outputs message
     void insert(std::string word);  //Insert function, either updates count or insert new node with given word
-    void max(std::string word);     //Returns the right-most node in the tree
-    void min(std::string word);     //Returns the left-most node in the tree
+    void max();                     //Calls the private function maximum and outputs the value
+    void min();                     //Returns the left-most node in the tree
 
 };
 

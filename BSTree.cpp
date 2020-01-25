@@ -4,6 +4,7 @@
 
 #include "BSTree.h"
 #include <iostream> //For cout and endl
+
 //BSTree basic constructor
 BSTree::BSTree()
 {
@@ -59,11 +60,11 @@ void BSTree::search(std::string word)
         Node* findNode = find(word);    //Call and save the node returned by the find function
         if (findNode->data == word)     //If the find returned a node with the word we are looking for
         {
-            std::cout << findNode->data << ": " << findNode->count << std::endl;    //Print node information
+            std::cout << findNode->data << ": " << findNode->count << std::endl;    //Print node's information
         }   //End of if the find returned a node with the word we were looking for
         else    //Else the find did not returned the node we are looking for
         {
-            std::cout << "Error! Word not found." << std::endl;
+            std::cout << word << ": " << 0 << std::endl;
         }   //End of else, if the findNode does not contain the word
     }   //End of else, if the tree is not empty
 }   //End of search function
@@ -101,3 +102,26 @@ void BSTree::insert(std::string word)
         }   //End of else, if the findNode is the parentNode
     }   //End of else, if the the tree is not empty
 }   //End of insert function
+
+BSTree::Node * BSTree::maximum()
+{
+    Node* currentNode = root;                   //Start from the root to traverse the tree
+    while (currentNode->rightChild != NULL)     //Traverse the right side of the tree
+        currentNode = currentNode->rightChild;  //Keep moving until the right-most node
+    return currentNode;                         //Return the right-most node
+
+}   //End of maximum function
+
+void BSTree::max()
+{
+
+    if (root == NULL)   //First check if the tree is empty
+    {
+        std::cout << std::endl; //Print empty line (no output)
+    }   //End of if tree is empty
+    else                //Else the tree is not empty, we call maximum function
+    {
+        Node* max = maximum();  //Get and save the result of the maximum function
+        std::cout << max->data << std::endl;    //Print the node's word
+    }
+}
