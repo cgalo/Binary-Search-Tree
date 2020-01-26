@@ -1,3 +1,4 @@
+#include "BSTree.h"
 //
 // Created by Carlos Galo on 1/22/20.
 //
@@ -22,7 +23,7 @@ BSTree::~BSTree()
 //  -Searches the tree to find the node holding the word in the parameter. Two cases to return:
 //  1. If tree holds the node with the given word, it'll return that node
 //  2. Else returns the parent node of where we should insert the new node
-//ONLY call this function after checking if the root is not null
+////ONLY call this function after checking if the root is not null
 BSTree::Node * BSTree::find(std::string word)
 {
     Node* currentNode = root;   //Start from the root of the tree and we work ourselves down
@@ -114,7 +115,6 @@ BSTree::Node * BSTree::maximum()
 
 void BSTree::max()
 {
-
     if (root == NULL)   //First check if the tree is empty
     {
         std::cout << std::endl; //Print empty line (no output)
@@ -124,4 +124,66 @@ void BSTree::max()
         Node* max = maximum();  //Get and save the result of the maximum function
         std::cout << max->data << std::endl;    //Print the node's word
     }
+}   //End of max function
+
+BSTree::Node * BSTree::minimum()
+{
+    Node* currentNode = root;                   //Start from the root to traverse the tree
+    while (currentNode->leftChild != NULL)      //Traverse the left side of the tree
+        currentNode = currentNode->leftChild;   //Keep moving until the left-most node
+    return currentNode;                         //Return the left-most node
+}   //End of minimum function
+
+void BSTree::min()
+{
+    if (root == NULL)                           //First we check if the tree is empty
+        std::cout << std::endl;                 //Print empty line
+    else                                        //Else the tree is not empty
+    {
+        Node* min = minimum();                  //Call and save the maximum private function results
+        std::cout << min->data << std::endl;    //Print the min node data
+    }   //End of else, if the tree is not empty
+}   //End of min function
+
+void BSTree::inOrderPrint(BSTree::Node *currentNode)
+{
+    if (currentNode == NULL)    //If we reach a leaf
+        return;                 //Exit
+    inOrderPrint(currentNode->leftChild);   //Traverse through the left side
+    std::cout << currentNode->data << ": " << currentNode->count << std::endl;  //Print node data and count
+    inOrderPrint(currentNode->rightChild);  //Traverse through the right side
+}   //End of inOrderPrint function
+
+void BSTree::printTree()
+{
+    if (root == NULL)                   //If the tree is empty
+        std::cout << std::endl;         //Print empty line
+    else                                //Else the tree is not empty
+        inOrderPrint(root); //Call the inOrderPrint function to prin the tree's nodes in-order traversal
+}   //End of printTree function
+
+BSTree::Node * BSTree::successor(std::string word)
+{
+    Node* findNode = find (word);       //Search if the word exists in the tree using find function
+    if (findNode->data == word)         //If the find returned a node with the word in the parameter
+    {
+        //Now we need to check if the node has a rightChild, and if that rightChild has a leftChild
+    }
+    else                                //Else the find function did not find the word in the tree
+        return NULL;                    //Return null, as we did not find the word in the tree
+
+}   //End of successor function
+
+void BSTree::next(std::string word)
+{
+    if (root == NULL)                   //If the tree is empty
+        std::cout << std::endl;         //Print empty line
+    else                                //Else the tree is not empty
+    {
+        Node* next = successor(word);
+        if (next == NULL)               //If the successor function returned NULL, as there is no successor
+            std::cout << std::endl;     //Print empty line
+        else                            //Else successor function found the successor of the word in the parameter
+            std::cout << next->data << std::endl;    //Print the successor data (word)
+    }   //
 }
