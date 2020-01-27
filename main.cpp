@@ -15,18 +15,15 @@ int main()
         std::string input;  //Create string to accept the input of the user
         std::cout<< "";
         std::getline (std::cin, input); //Get the whole input of the user
-
         //Now we need to split the input to get the cmd and the word we want to store
         std::string cmd = getWord(input, 1);      //Get the first word in the input and save as cmd
         toUpper(&cmd);                                      //Convert the cmd into upper case
-        std::cout << "cmd: " << cmd << std::endl;   //Check cmd entered
 
         if (cmd == "EXIT")                                  //If the command entered was 'EXIT'
             break;                                          //Exit the while-loop/ the program
         else                                                //Else the command was not 'EXIT'
         {
             std::string word = getWord (input, 2);//Get the second word of the input
-            std::cout << "Word: " << word << std::endl;
             //Now we can call the menu and check the input
             menu(cmd, word);
 
@@ -79,6 +76,7 @@ void menu(std::string cmd, std::string word)
     }   //End of else-if cmd == "MAX"
     else if (cmd == "NEXT")
     {
+        tree.next(word);
 
     }   //End of else-if cmd == "NEXT"
     else if (cmd == "PREV")

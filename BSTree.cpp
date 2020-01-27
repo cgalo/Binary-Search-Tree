@@ -168,22 +168,32 @@ BSTree::Node * BSTree::successor(std::string word)
     if (findNode->data == word)         //If the find returned a node with the word in the parameter
     {
         //Now we need to check if the node has a rightChild, and if that rightChild has a leftChild
-    }
+        if (findNode->rightChild == NULL || findNode->rightChild->leftChild == NULL)
+            return NULL;     //Return null as the node does not have a successor
+        else                //Else if findNode has a rightChild, and that rightChild has a leftChild
+        {
+            Node* currentNode = findNode;
+            currentNode = currentNode->rightChild;      //Move to the rightChild
+            while (currentNode->leftChild != NULL)      //Traverse until the left-most node
+                currentNode = currentNode->leftChild;   //Move the currentNode to the next leftChild
+            return currentNode;                         //Return the successor node
+        }   //Else if there is a rightChild, and that rightChild has a leftChild
+    }   //End of if the find function found the word in the tree
     else                                //Else the find function did not find the word in the tree
         return NULL;                    //Return null, as we did not find the word in the tree
-
 }   //End of successor function
 
 void BSTree::next(std::string word)
 {
-    if (root == NULL)                   //If the tree is empty
-        std::cout << std::endl;         //Print empty line
+    if (root == NULL)                  //If the tree is empty
+        std::cout << std::endl;        //Print empty line
     else                                //Else the tree is not empty
     {
         Node* next = successor(word);
-        if (next == NULL)               //If the successor function returned NULL, as there is no successor
-            std::cout << std::endl;     //Print empty line
-        else                            //Else successor function found the successor of the word in the parameter
-            std::cout << next->data << std::endl;    //Print the successor data (word)
-    }   //
-}
+        if (next == NULL)                           //If the successor function returned NULL, as there is no successor
+            std::cout << std::endl;                 //Print empty line
+        else                              //Else successor function found the successor of the word in the parameter
+            std::cout << next->data << std::endl;   //Print the successor data (word)
+    }   //End of else, if the tree is not empty
+}   //End of next function
+
