@@ -7,6 +7,7 @@ void menu           (std::string cmd, std::string word);    //Declaring the menu
 void toUpper        (std::string* word);                    //Declaring the toUpper function
 std::string getWord (std::string line, int wordIndex);      //Declaring getWord function
 bool checkWord      (std::string word);                     //Declaring checkWord function
+void showHelp       ();                                     //Declaring showHelp function
 
 int main()
 {
@@ -26,7 +27,6 @@ int main()
             std::string word = getWord (input, 2);//Get the second word of the input
             //Now we can call the menu and check the input
             menu(cmd, word);
-
         }
     }   //End of while-loop
 
@@ -58,13 +58,9 @@ void menu(std::string cmd, std::string word)
     else if (cmd == "SEARCH")
     {
         if (wordCheck == false)
-        {
             std::cout << std::endl;
-        }
         else
-        {
             tree.search(word);
-        }
     }   //End of else-if cmd == "SEARCH"
     else if (cmd == "MIN")
     {
@@ -76,12 +72,18 @@ void menu(std::string cmd, std::string word)
     }   //End of else-if cmd == "MAX"
     else if (cmd == "NEXT")
     {
-        tree.next(word);
+        if (wordCheck == false)
+            std::cout << std::endl;
+        else
+            tree.next(word);
 
     }   //End of else-if cmd == "NEXT"
     else if (cmd == "PREV")
     {
-
+        if (wordCheck == false)
+            std::cout << std::endl;
+        else
+            tree.previous(word);
     }   //End of else-if cmd == "PREV"
     else if (cmd == "LIST")
     {
@@ -89,7 +91,7 @@ void menu(std::string cmd, std::string word)
     }   //End of else-if cmd == "LIST
     else if (cmd == "HELP")
     {
-
+        showHelp();
     }   //End of else-if cmd == "HELP"
     else
     {
@@ -142,3 +144,8 @@ bool checkWord (std::string word)
         return true;
 
 }   //End of checkWord function
+
+void showHelp()
+{
+
+}   //End of showHelp function

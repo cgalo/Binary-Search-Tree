@@ -123,7 +123,7 @@ void BSTree::max()
     {
         Node* max = maximum();  //Get and save the result of the maximum function
         std::cout << max->data << std::endl;    //Print the node's word
-    }
+    }   //End of else, if the tree is not empty
 }   //End of max function
 
 BSTree::Node * BSTree::minimum()
@@ -150,7 +150,7 @@ void BSTree::inOrderPrint(BSTree::Node *currentNode)
     if (currentNode == NULL)    //If we reach a leaf
         return;                 //Exit
     inOrderPrint(currentNode->leftChild);   //Traverse through the left side
-    std::cout << currentNode->data << ": " << currentNode->count << std::endl;  //Print node data and count
+    std::cout << currentNode->data << ": " << currentNode->count << std::endl;  //Print node's data and count
     inOrderPrint(currentNode->rightChild);  //Traverse through the right side
 }   //End of inOrderPrint function
 
@@ -187,7 +187,7 @@ void BSTree::next(std::string word)
 {
     if (root == NULL)                  //If the tree is empty
         std::cout << std::endl;        //Print empty line
-    else                                //Else the tree is not empty
+    else                               //Else the tree is not empty
     {
         Node* next = successor(word);
         if (next == NULL)                           //If the successor function returned NULL, as there is no successor
@@ -196,4 +196,41 @@ void BSTree::next(std::string word)
             std::cout << next->data << std::endl;   //Print the successor data (word)
     }   //End of else, if the tree is not empty
 }   //End of next function
+
+BSTree::Node * BSTree::predecessor(std::string word)
+{
+    Node* findNode = find(word);    //Call and save find function result
+    if (findNode->data == word)     //If Find function returned a node with the word
+    {
+       //Now we need to check if the node has a leftChild, and that leftChild has a rightChild
+       if (findNode->leftChild == NULL || findNode->leftChild->rightChild == NULL)
+           return NULL;     //Return null as the node have a predecessor
+       else                 //Else it has a predecessor
+       {
+           Node* currentNode = findNode;
+           currentNode = currentNode->leftChild;        //Move to the leftChild
+           while (currentNode->rightChild != NULL)      //Traverse until the right-most node
+               currentNode = currentNode->rightChild;   //Move the currentNode to the next rightNode
+           return currentNode;                          //Return the predecessor node
+       }    //End of else, if there is a predecessor
+    }   //End of if findNode contains the word in the parameter
+    else                            //Else if the findNode did not find the word in the tree
+    {
+        return NULL;                                    //Return Null as the word is not in the tree
+    }   //End of else, if the findNode doesn't contain the word
+}   //End of predecessor function
+
+void BSTree::previous(std::string word)
+{
+    if (root == NULL)                   //If the tree is empty
+        std::cout << std::endl;         //Return empty line as the tree is empty
+    else                                //Else the tree isn't empty
+    {
+        Node *prev = predecessor(word);
+        if (prev == NULL)               //If there is no predecessor, or the word wasn't found
+            std::cout << std::endl;     //Print empty line
+        else                            //Else the predecessor returned a successful node
+            std::cout << prev->data << std::endl;   //Display the node data
+    }   //End of else, if the tree isn't empty
+}   //End of previous function
 
