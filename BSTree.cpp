@@ -9,15 +9,26 @@
 //BSTree basic constructor
 BSTree::BSTree()
 {
-    root = NULL;
+    root = NULL;                //Set the root of the tree to initialize as NULL
 }   //End of constructor
 
 //Destructor for BSTree object
 //  -Goes through the tree and deletes all nodes in the tree
 BSTree::~BSTree()
 {
+    treeDestructor(root);
+}   //End of destructor function
 
-}   //End of destructor
+void BSTree::treeDestructor(BSTree::Node *currentNode)
+{
+    if (currentNode != NULL)
+    {
+        treeDestructor(currentNode->leftChild);
+        treeDestructor(currentNode->rightChild);
+        delete currentNode;
+    }   //End of if the currentNode is not NULL
+    root == NULL;
+}   //End of treeDestructor function
 
 //Find function, returns a node struct
 //  -Searches the tree to find the node holding the word in the parameter. Two cases to return:
@@ -234,3 +245,42 @@ void BSTree::previous(std::string word)
     }   //End of else, if the tree isn't empty
 }   //End of previous function
 
+BSTree::Node * BSTree::discard(std::string word)
+{
+    //First we check if the word is in the tree before trying to remove it
+    Node* findNode = find(word);
+    if (findNode->data == word)         //If the findNode result has the
+    {
+        findNode->count--;              //Remove one instance of the count
+        if (findNode->count == 0)       //If the count of the node goes to 0
+        {
+            if (findNode == root)       //If the findNode is the root of the tree
+            {
+                //We make the root's rightChild the new root
+                Node* oldRoot = findNode;
+
+            }   //End of if the findNode is the root of the tree
+        }   //End of if the node's count hits 0
+        else
+            return findNode;            //Return the node with updated count
+    }   //If the find function found the word in the tree
+    else                                //Else the findNode did not find the word in the tree
+        return NULL;                    //Return NULL
+}   //End of discard function
+
+void BSTree::remove(std::string word)
+{
+    if (root == NULL)                   //If tree is empty
+        std::cout << std::endl;         //Output empty line
+    else                                //Else the tree is not empty
+    {
+        Node* removeNode = discard(word);   //Call and get result from discard function
+        if (removeNode == NULL)             //If the the word is not in the tree
+            std::cout << std::endl;         //Output empty line
+        else                                //Else the discard function returned a non-null node
+        {
+
+        }   //End of else, if the removeNode returned a non-null node
+
+    }   //End of else, if the tree is empty
+}   //End of remove function

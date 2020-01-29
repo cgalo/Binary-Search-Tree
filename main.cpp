@@ -29,50 +29,47 @@ int main()
             menu(cmd, word);
         }
     }   //End of while-loop
-
     //We are here if 'Exit' was entered as cmd
-
     return 0;
-}
+}   //End of main function
 
 void menu(std::string cmd, std::string word)
 {
     //Check if the user input a word with the cmd
     bool wordCheck = checkWord(word);
-    //C++ does not support switch statement with a string so I'll use if-else statements through out
-    if (cmd == "INSERT")
+    //C++ does not support switch statement with a string/char array so I'll use if-else statements through out
+    if (cmd == "INSERT")                        //If the cmd is delete
     {
         if (wordCheck == false)                 //If the user did not input a word to insert with the cmd
-        {
             std::cout << std::endl;             //Print empty line, do not insert
-        }   //End of if the user did not provide a word w/ the cmd
         else                                    //Else the user did provide a word to insert with the cmd
-        {
             tree.insert(word);                  //Insert the provided word to the BST
-        }   //End of else, if the user input a word w/ the cmd
     }   //End of if the cmd == "INSERT"
-    else if (cmd == "DELETE")
+    else if (cmd == "DELETE")                   //Else if the cmd is delete
     {
-
+        if (wordCheck == false)                 //If the user did not input a second word
+            std::cout << std::endl;             //Output empty line, as we need a word w/ the cmd
+        else                                    //Else user input a cmd w/ a word
+            tree.remove(word);                  //We call the tree's remove method and pass the word given
     }   //End of else-if cmd == "DELETE"
-    else if (cmd == "SEARCH")
+    else if (cmd == "SEARCH")                   //Else if the cmd is search
     {
-        if (wordCheck == false)
+        if (wordCheck == false)                 //If the user did not input a second word
             std::cout << std::endl;
         else
             tree.search(word);
     }   //End of else-if cmd == "SEARCH"
-    else if (cmd == "MIN")
+    else if (cmd == "MIN")                      //Else if the cmd is min
     {
-        tree.min();
+        tree.min();                             //Call the min method in the tree
     }   //End of else-if cmd == "MIN"
-    else if (cmd == "MAX")
+    else if (cmd == "MAX")                      //Else if the cmd is max
     {
-        tree.max();
+        tree.max();                             //
     }   //End of else-if cmd == "MAX"
     else if (cmd == "NEXT")
     {
-        if (wordCheck == false)
+        if (wordCheck == false)                 //If the user did not input a second word
             std::cout << std::endl;
         else
             tree.next(word);
@@ -109,30 +106,29 @@ void toUpper (std::string* word)
 std::string getWord (std::string line, int wordIndex)
 {
 
-    int countWord = 0;      //Total read words
-    std::string returnWord; //To store the word to return
-
-    for (int i = 0 ; i < line.length(); i++) { // iterate over all characters in 'line'
-        if (line[i] == ' ' || i == line.length() - 1)   // if this character is a space we might be done reading a word from 'line'
+    int countWord = 0;      //Will be used the keep tracks of the amount of words read in the string
+    std::string returnWord; //To store the word and return it
+    for (int i = 0 ; i < line.length(); i++)            //Iterate through the string char by char
+    {
+        if (line[i] == ' ' || i == line.length() - 1)   //If the char is a space or the last one in the string
         {
-            if (line[i+1] != ' ' || i == line.length() - 1 )    // next character is not a space, so we are done reading a word
-            {
-                countWord++; // increase number of read words
-                if (countWord == wordIndex) // was this the word we were looking for?
+            if (line[i+1] != ' ' || i == line.length() - 1 )    //If the next char is not a space
+            {                                                   //  Or the char is the last char in the string
+                countWord++;                                    //We reach the end of the word, update countWord
+                if (countWord == wordIndex)                     //If we reached the word number we wanted in the string
                 {
                     if (i == line.length() - 1)
                     {
                         returnWord += line [i];
                     }
                     return returnWord; // yes it was, so return it
-                }
+                }   //End of if
                 returnWord =""; // nope it wasn't .. so reset word and start over with the next one in 'line'
             }
         }
-        else { // not a space .. so append the character to 'word'
-            returnWord += line[i];
-        }
-    }
+        else                                            //Else the char is not a space
+            returnWord += line[i];                      //We append the char at the end of the returnWord string
+    }   //End of if the char is a space or the last char in the string
     return "wordIndex error";   //If the line does not have the # of word requested in the wordIndex
 }   //End of getWord function
 

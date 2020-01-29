@@ -30,6 +30,9 @@ private:
     void inOrderPrint   (Node* currentNode);
     Node* successor     (std::string word);
     Node* predecessor   (std::string word);
+    Node* discard       (std::string word);
+    ////The following method should never be called besides by the destructor -> ~BST()
+    void treeDestructor (Node* currentNode);    //Travereses the tree to destroy every node in the tree
 
 
 public:
@@ -40,8 +43,9 @@ public:
     void max();                     //Calls the private function maximum and outputs the value
     void min();                     //Returns the left-most node in the tree
     void printTree();               //Calls private inOrderPrint function, after checking that the tree is not empty
-    void next(std::string word);
-    void previous(std::string word);
+    void next(std::string word);    //Calls private successor function, after checking that the tree is not empty
+    void previous(std::string word);//Calls private predecessor function, after checking that the tree is not empty
+    void remove(std::string word);  //Calls private discard function, after checking that the tree is not empty
 };
 
 
