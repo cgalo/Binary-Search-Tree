@@ -11,6 +11,9 @@ void showHelp       ();                                     //Declaring showHelp
 
 int main()
 {
+
+    int x = 123;
+
     while (true)
     {
         std::string input;  //Create string to accept the input of the user
@@ -143,5 +146,15 @@ bool checkWord (std::string word)
 
 void showHelp()
 {
+    std::cout << "insert <string>"  << std::endl;
+    std::cout << "delete <string>"  << std::endl;
+    std::cout << "search <string>"  << std::endl;
+    std::cout << "min"              << std::endl;
+    std::cout << "max"              << std::endl;
+    std::cout << "next <string>"    << std::endl;
+    std::cout << "list <string>"    << std::endl;
+    std::cout << "help"             << std::endl;
+    std::cout << "exit"             << std::endl;
 
+    std::cout << "Insert\nDelete\nSearch\nMin\nMax\nNext\nPrev\nlist\nHelp\nExit" <<std::endl;
 }   //End of showHelp function

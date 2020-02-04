@@ -25,14 +25,16 @@ private:
     };  //End of Node struct
     Node* root; //Root, or beginning, of the tree
     Node* find          (std::string word);
+    Node* insertion     (std::string word);
     Node* maximum       ();
-    Node* minimum       ();
+    Node* minimum       (Node* currentNode);
     void inOrderPrint   (Node* currentNode);
     Node* successor     (std::string word);
     Node* predecessor   (std::string word);
-    Node* discard       (std::string word);
+    Node* discardNode   (Node* currentNode);
+    void transplant     (Node* u, Node* v);     //Helper function that will move subtree, called by discardNode()
     ////The following method should never be called besides by the destructor -> ~BST()
-    void treeDestructor (Node* currentNode);    //Travereses the tree to destroy every node in the tree
+    void treeDestructor (Node* currentNode);    //Traverses the tree to destroy every node in the tree
 
 
 public:
