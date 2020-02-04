@@ -128,28 +128,28 @@ void BSTree::insert(std::string word)
     std::cout << insertNode->data << ": " << insertNode->count << std::endl;
 }   //End of insert function
 
-BSTree::Node * BSTree::maximum()
+BSTree::Node * BSTree::maximum(BSTree::Node * currentNode)
 {
-    Node* currentNode = root;                   //Start from the root to traverse the tree
     while (currentNode->rightChild != NULL)     //Traverse the right side of the tree
         currentNode = currentNode->rightChild;  //Keep moving until the right-most node
     return currentNode;                         //Return the right-most node
-
 }   //End of maximum function
 
 void BSTree::max()
 {
-    if (root == NULL)   //First check if the tree is empty
+    if (root == NULL)                           //First check if the tree is empty
+        std::cout << std::endl;                 //Print empty line (no output)
+    else                                        //Else the tree is not empty, we call maximum function
     {
-        std::cout << std::endl; //Print empty line (no output)
-    }   //End of if tree is empty
-    else                //Else the tree is not empty, we call maximum function
-    {
-        Node* max = maximum();  //Get and save the result of the maximum function
-        std::cout << max->data << std::endl;    //Print the node's word
+        Node* max = maximum(root);  //Get and save the result of the maximum function
+        std::cout << max->data << std::endl;   //Print the node's word
     }   //End of else, if the tree is not empty
 }   //End of max function
 
+/* Minimum private function, requires to be passed a node pointer
+ *  This function traverses to the left-most child of the given tree
+ *  - If the given node has not child then it will return the given node
+ * */
 BSTree::Node * BSTree::minimum(BSTree::Node *currentNode)
 {
     while (currentNode->leftChild != NULL)      //Traverse the left side of the tree
@@ -157,6 +157,11 @@ BSTree::Node * BSTree::minimum(BSTree::Node *currentNode)
     return currentNode;                         //Return the left-most node
 }   //End of minimum function
 
+/* Min public function, displays the left-most node'data and count of the tree
+ *  This function does not require any parameters
+ *  -If the tree is empty, if it is then it will output an empty line
+ *  -Else it will call the minimum() private function, and output the returned node's data and count
+ * */
 void BSTree::min()
 {
     if (root == NULL)                           //First we check if the tree is empty
@@ -168,6 +173,10 @@ void BSTree::min()
     }   //End of else, if the tree is not empty
 }   //End of min function
 
+/* inOrderPrint private function, prints in-order traversal node's data and count tree
+ *  It utilizes recursion to traverse the tree
+ *  It is called only by the printTree() public function
+ * */
 void BSTree::inOrderPrint(BSTree::Node *currentNode)
 {
     if (currentNode == NULL)    //If we reach a leaf
@@ -177,6 +186,8 @@ void BSTree::inOrderPrint(BSTree::Node *currentNode)
     inOrderPrint(currentNode->rightChild);  //Traverse through the right side
 }   //End of inOrderPrint function
 
+/* printTree()
+ * */
 void BSTree::printTree()
 {
     if (root == NULL)                   //If the tree is empty
@@ -184,6 +195,7 @@ void BSTree::printTree()
     else                                //Else the tree is not empty
         inOrderPrint(root); //Call the inOrderPrint function to prin the tree's nodes in-order traversal
 }   //End of printTree function
+
 
 BSTree::Node * BSTree::successor(std::string word)
 {
@@ -193,10 +205,16 @@ BSTree::Node * BSTree::successor(std::string word)
         Node* currentNode = searchNode;
         if (currentNode->rightChild != NULL)    //If the currentNode has a rightChild
             return minimum(currentNode);        //Return the left-most node of currentNode
+        Node* parentNode = currentNode->parentNode; //currentNode has no RCH; go up
+        while (parentNode != NULL && currentNode == parentNode->rightChild)
+        {
+            currentNode = parentNode;
+            parentNode = parentNode->parentNode;
+        }   //End of while-loop
+        return parentNode;
     }   //End of if the search found the word in the tree
     else                                        //Else the word is not in the tree
         return NULL;                            //Return NULL
-
 }   //End of successor function
 
 void BSTree::next(std::string word)

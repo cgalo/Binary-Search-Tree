@@ -26,7 +26,7 @@ private:
     Node* root; //Root, or beginning, of the tree
     Node* find          (std::string word);
     Node* insertion     (std::string word);
-    Node* maximum       ();
+    Node* maximum       (Node* currenetNode);
     Node* minimum       (Node* currentNode);
     void inOrderPrint   (Node* currentNode);
     Node* successor     (std::string word);
