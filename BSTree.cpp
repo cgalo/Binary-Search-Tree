@@ -287,10 +287,13 @@ void BSTree::transplant(BSTree::Node *u, BSTree::Node *v)
 
 BSTree::Node* BSTree::discardNode(BSTree::Node *currentNode)
 {
+    //First case
     if (currentNode->leftChild == NULL)                     //If currentNode has no left child
         transplant(currentNode, currentNode->rightChild);   //Replace currentNode with its right child
+    //Second case
     else if (currentNode->rightChild == NULL)               //If currentNode's RCH null, but has a LCH
         transplant(currentNode, currentNode->leftChild);
+    //Last case
     else
     {
         Node* successorNode = successor(currentNode->data); //Get the successor of the currentNode
