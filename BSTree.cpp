@@ -292,13 +292,16 @@ void BSTree::remove(std::string word)
         std::cout << std::endl;             //Output empty line if tree is empty
     else                                    //Else the tree is not empty
     {
-        Node* searchNode = find(word);
-        if (searchNode->data == word)       //If the word is in the tree
+        Node* searchNode = find(word);      //Call the search() to get the node with the word in the tree
+        if (searchNode->data == word)       //If the word is in the tree, search() found it in the tree
         {
             searchNode->count--;            //Update the count word
             std::cout << searchNode->count << ": " << searchNode->count << std::endl;   //Output node info
             if (searchNode->count == 0)     //If the node count gets to 0
-                discardNode(word);          //Remove the node from the tree by calling the discardNode private function
+                discardNode(searchNode);    //Remove the node from the tree by calling the discardNode private function
         }   //End of if the word is in the tree
+        else                                //Else the searchNode does not have the word, the word is not in the tree
+            std::cout << std::endl;         //Output empty line as word is not in the tree
+
     }   //End of else, if the tree is empty
 }   //End of remove function
