@@ -68,7 +68,7 @@ void menu(std::string cmd, std::string word)
     }   //End of else-if cmd == "MIN"
     else if (cmd == "MAX")                      //Else if the cmd is max
     {
-        tree.max();                             //
+        tree.max();
     }   //End of else-if cmd == "MAX"
     else if (cmd == "NEXT")
     {
@@ -85,6 +85,13 @@ void menu(std::string cmd, std::string word)
         else
             tree.previous(word);
     }   //End of else-if cmd == "PREV"
+    else  if (cmd == "PARENT")
+    {
+        if(wordCheck == false)                //If the user did not provide a string with the cmd
+            std::cout << std::endl;           //Output an empty line
+        else
+            tree.parent(word);                //Call the parent method of the tree
+    }   //End of else-if cmd == "PARENT"
     else if (cmd == "LIST")
     {
         tree.printTree();       //Prints in-order traversal of the tree node's, outputs all the node's data and count
