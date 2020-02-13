@@ -134,6 +134,12 @@ void BSTree::insert(std::string word)
 
 void BSTree::max()
 {
+    /* Max public function, parameter(s): N/A
+     * Objective: Output the right-most node of the tree
+     * Cases:
+     *  1. Tree is empty, output empty line
+     *  2. Call maximum private method and output result's data
+     * */
     if (root == NULL)                           //First check if the tree is empty
         std::cout << std::endl;                 //Print empty line (no output)
     else                                        //Else the tree is not empty, we call maximum function
