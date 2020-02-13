@@ -6,7 +6,7 @@
 #define BST_BSTREE_H
 
 #include <string>   //Utilized to save data as string
-
+#include <iostream>
 class BSTree {
 private:
     //Create node struct that holds a string, frequency of the string, and reference to its left and right child
@@ -24,15 +24,15 @@ private:
         }   //End of constructor
     };  //End of Node struct
     Node* root; //Root, or beginning, of the tree
-    Node* find          (std::string word);
-    Node* insertion     (std::string word);
+    Node* find          (std::string word); //Looks for node w/ word in the tree, returns node or parent node
+    Node* insertion     (std::string word); //
     Node* maximum       (Node* currentNode);
     Node* minimum       (Node* currentNode);
     void inOrderPrint   (Node* currentNode);
     Node* successor     (std::string word);
     Node* predecessor   (std::string word);
     Node* discardNode   (Node* deleteNode);
-    void transplant     (Node* u, Node* v);     //Helper function that will move subtree, called by discardNode()
+   // void transplant     (Node* u, Node* v);     //Helper function that will move subtree, called by discardNode()
     ////The following method should never be called besides by the destructor -> ~BST()
     void treeDestructor (Node* currentNode);    //Traverses the tree to destroy every node in the tree
 

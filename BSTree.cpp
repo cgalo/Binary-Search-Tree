@@ -70,7 +70,7 @@ BSTree::Node * BSTree::find(std::string word)
 void BSTree::search(std::string word)
 {
     if (root == NULL)                   //If the tree is empty
-        std::cout << std::endl;         //Output empty line
+        std::cout << word << ": " << 0 << std::endl;    //Output word and 0 count
     else                                //Else the tree is not empty
     {
         Node* findNode = find(word);    //Call and save the node returned by the find function
@@ -200,27 +200,6 @@ void BSTree::printTree()
         inOrderPrint(root); //Call the inOrderPrint function to prin the tree's nodes in-order traversal
 }   //End of printTree function
 
-
-BSTree::Node * BSTree::successor(std::string word)
-{
-    Node* searchNode = find(word);              //Search a node with the word in the tree
-    if (searchNode->data == word)               //If the search found the node with the word
-    {
-        Node* currentNode = searchNode;
-        if (currentNode->rightChild != NULL)    //If the currentNode has a rightChild
-            return minimum(currentNode);        //Return the left-most node of currentNode
-        Node* parentNode = currentNode->parentNode; //currentNode has no RCH; go up
-        while (parentNode != NULL && currentNode == parentNode->rightChild)
-        {
-            currentNode = parentNode;
-            parentNode = parentNode->parentNode;
-        }   //End of while-loop
-        return parentNode;
-    }   //End of if the search found the word in the tree
-    else                                        //Else the word is not in the tree
-        return NULL;                            //Return NULL
-}   //End of successor function
-
 void BSTree::next(std::string word)
 {
     if (root == NULL)                  //If the tree is empty
@@ -228,17 +207,55 @@ void BSTree::next(std::string word)
     else                               //Else the tree is not empty
     {
         Node* next = successor(word);
-        if (next == NULL)                           //If the successor function returned NULL, as there is no successor
-            std::cout << std::endl;                 //Print empty line
-        else                              //Else successor function found the successor of the word in the parameter
+        if (next == NULL)              //If the successor function returned NULL, as there is no successor
+            std::cout << std::endl;    //Print empty line
+        else                           //Else successor function found the successor of the word in the parameter
             std::cout << next->data << std::endl;   //Print the successor data (word)
     }   //End of else, if the tree is not empty
 }   //End of next function
 
+BSTree::Node * BSTree::successor(std::string word)
+{
+    /* Successor private function, parameter(s): string
+     * Objective: Return successor node from the node w/ the given word
+     * Cases:
+     *  1. If the node has a right child (RCH)
+     *      A. We traverse to node's RCH most left-most node and return it
+     *      B. If the node doesn't have a left child, then we return the node's RCH
+     *  2. The node has no RCH, then we return the node's recent ancestor whose LCH is an ancestor of the node
+     * */
+    Node* searchNode = find(word);                  //Search a node with the word in the tree
+    if (searchNode->data == word)                   //If the search found the node with the word
+    {
+        Node* currentNode = searchNode;             //Rephrasing variable
+        if (currentNode == root)                    //If the current node is the root of the tree
+            return NULL;                            //Output NULL as it doesn't have a parent node
+        else if (currentNode->rightChild != NULL)   //If the currentNode has a rightChild
+        {
+            currentNode = currentNode->rightChild;  //Move the current node pointer to its RCH
+            return minimum(currentNode);            //Return the left-most node of currentNode or RCH
+        }   //End of if the current node has a right-child
+        else                                        //Else the current node has no right child
+        {
+            Node* parentNode = currentNode->parentNode; //Save the current node's parent
+            // Keep traversing up until we hit the root or the current node is the LCH of its parent node
+            while (parentNode != NULL && currentNode == parentNode->rightChild && parentNode->parentNode != NULL)
+            {
+                currentNode = parentNode;               //Update the current node up
+                parentNode = parentNode->parentNode;    //Update the parent node up
+            }   //End of while-loop
+            return parentNode;
+        }   //End of else the current node has no right child
+    }   //End of if the search found the word in the tree
+    else                                        //Else the word is not in the tree
+        return NULL;                            //Return NULL
+
+}   //End of successor function
+
 BSTree::Node * BSTree::predecessor(std::string word)
 {
     Node* findNode = find(word);    //Call and save find function result
-    if (findNode->data == word)     //If Find function returned a node with the word
+    if (findNode->data == word)     //If the word in the tree
     {
        //Now we need to check if the node has a leftChild, and that leftChild has a rightChild
        if (findNode->leftChild == NULL || findNode->leftChild->rightChild == NULL)
@@ -272,22 +289,7 @@ void BSTree::previous(std::string word)
     }   //End of else, if the tree isn't empty
 }   //End of previous function
 
-//Transplant helper function
-//  -Moves a subtree, and handles the "root problem"
-//  -Node u's parent becomes v's parent, and u's parent gets u as the appropriate child
-void BSTree::transplant(BSTree::Node *u, BSTree::Node *v)
-{
-    if (u == NULL)                          //If u is the root
-    {
-        root = v;                           //v becomes the new root
-    }   //End of if u is the root of the tree
-    else if (u == u->parentNode->leftChild) //If u is a leftChild of its parent
-        u->parentNode->leftChild = v;       //Then v becomes that left child
-    else                                    //Else v becomes the rightChild
-        u->parentNode->rightChild = v;
-    if (v !=  NULL)                         //If v is not null, then v's parent
-        v->parentNode = u->parentNode;      //Becomes u's parent (even if u was the root)
-}   //End of transplant function
+
 
 
 /* discardNode (node) is a private function called by the public remove(string) function
@@ -297,23 +299,24 @@ void BSTree::transplant(BSTree::Node *u, BSTree::Node *v)
  * */
 BSTree::Node* BSTree::discardNode(BSTree::Node *deleteNode)
 {
-    //First case: the deleteNode
-    if (deleteNode->leftChild == NULL)                     //If currentNode has no left child
-        transplant(deleteNode, deleteNode->rightChild);   //Replace currentNode with its right child
-    //Second case
-    else if (deleteNode->rightChild == NULL)               //If currentNode's RCH null, but has a LCH
-        transplant(deleteNode, deleteNode->leftChild);
-    //Last case
+    //We have three cases: deleteNode has no children, has both children, has one children
+    if (deleteNode->leftChild == NULL && deleteNode->rightChild == NULL)
+    {
+        if (deleteNode == root) //If the deleteNode is the root of the tree
+        {
+
+        }
+    }   //End of if the deleteNode has no children
+    else if (deleteNode->leftChild != NULL && deleteNode->rightChild != NULL)
+    {
+
+    }   //End of else-if the delete node has both children
     else
     {
-        Node* successorNode = successor(deleteNode->data); //Get the successor of the currentNode
-        if (successorNode != NULL)                          //If the currentNode had a successor
-        {
-            if (successorNode->parentNode != deleteNode);  //If successor isn't currentNode's rightChild
-        }
-    }
+        //Get the child that is not NULL
+        Node* child = (deleteNode->leftChild != NULL) ? deleteNode->leftChild : deleteNode->rightChild;
 
-
+    }   //End of else, the deleteNode has only one children
 }   //End of discardNode function
 
 /* remove() is a public function that requires a string as a parameter
@@ -348,15 +351,17 @@ void BSTree::remove(std::string word)
     }   //End of else, if the tree is empty
 }   //End of remove function
 
-/* Parent public function, parameter(s): string
- * Objective: Find a node with the given string and output that node's parent
- * Cases:
- *  1.  A. We found the node with the string and it has a parent node, we output parent node's data
- *      B. We found the node in the tree but it has no parent node (root) we output blank line
- *  2. There is no node w/ the given string, we output a blank line
- * */
+
 void BSTree::parent(std::string word)
 {
+    /* Parent public function, parameter(s): string
+     * Objective: Find a node with the given string and output that node's parent
+     * Cases:
+     *  1.  A. We found the node with the string and it has a parent node, we output parent node's data
+     *      B. We found the node in the tree but it has no parent node (root) we output blank line
+     *  2. There is no node w/ the given string, we output a blank line
+     * */
+
     if (root == NULL)               //If the tree is empty
         std::cout << std::endl;     //Output empty line
     else                            //Else the tree is not empty
@@ -375,3 +380,43 @@ void BSTree::parent(std::string word)
 
     }   //End of else, if the tree is not empty
 }   //End of parent function
+
+
+void BSTree::children(std::string word)
+{
+    /* Children public function, parameter(s): string
+     * Objective: Output the node's, containing the given word, children data
+     * Cases:
+     *  1. The tree is empty, output empty line
+     *  2. We get the find() and get a node w/ the given word
+     *      A. The node has both children (LCH & RCH) with data, we output both children's data
+     *      B. The node has no children, both are NULL, then we output an empty line
+     *      C. The node has one child, the other is NULL, we output the child's data and string NULL
+     *  3. The find method did not find a node w/ the given word, output empty line
+     * */
+    if (root == NULL)                   //If the tree is empty
+        std::cout << std::endl;         //Output empty line
+    else                                //Else the tree is not empty
+    {
+        Node* searchNode = find(word);  //Try to find a node w/ the given word in the tree
+        if (searchNode->data == word)   //If we found a node w/ the given word
+        {
+            Node* currentNode = searchNode; //Rephrasing variables for easier understanding
+            //If the current node has two children (not null), then output children's data
+            if (currentNode->leftChild != NULL && currentNode->rightChild != NULL)
+                std::cout << currentNode->rightChild->data << ", " << currentNode->leftChild->data << std::endl;
+            //If both children are NULL then output empty line
+            else if (currentNode->leftChild == NULL && currentNode->rightChild == NULL)
+                std::cout << std::endl;
+            else    //Else the current node has either the LCH or RCH with values
+            {
+                if (currentNode->leftChild == NULL)     //If the LCH is null
+                    std::cout << "NULL, " << currentNode->rightChild << std::endl;
+                else                                    //Else the RCH is null
+                    std::cout << currentNode->leftChild << ", NULL"  << std::endl;
+            }   //End of else, if the current node has at least a not null children
+        }   //End of if the searchNode contains given word
+        else                            //Else the search did not find a node w/ the word in the tree
+            std::cout << std::endl;     //Output an empty line
+    }   //End of else, if the tree is not empty
+}
