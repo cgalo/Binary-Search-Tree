@@ -275,7 +275,7 @@ void BSTree::previous(std::string word)
         std::cout << std::endl;         //Return empty line as the tree is empty
     else                                //Else the tree isn't empty
     {
-        Node *prev = predecessor(word);
+        Node* prev = predecessor(word); //Call the predecessor private method, pass the word as parameter
         if (prev == NULL)               //If there is no predecessor, or the word wasn't found
             std::cout << std::endl;     //Print empty line
         else                            //Else the predecessor returned a successful node
