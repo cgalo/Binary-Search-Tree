@@ -326,49 +326,17 @@ BSTree::Node * BSTree::predecessor(std::string word)
         return NULL;                //Return NULL as the word is no in tree
 }   //End of predecessor function
 
-
-/* discardNode (node) is a private function called by the public remove(string) function
- * The purpose of this function is to remove a node from the tree and adjust the tree accordingly
- * There are three base cases:
- *  -If the given node has
- * */
-BSTree::Node* BSTree::discardNode(BSTree::Node *deleteNode)
-{
-    //We have three cases: deleteNode has no children, has both children, has one children
-    if (deleteNode->leftChild == NULL && deleteNode->rightChild == NULL)
-    {
-        if (deleteNode == root) //If the deleteNode is the root of the tree
-        {
-
-        }
-    }   //End of if the deleteNode has no children
-    else if (deleteNode->leftChild != NULL && deleteNode->rightChild != NULL)
-    {
-
-    }   //End of else-if the delete node has both children
-    else
-    {
-        //Get the child that is not NULL
-        Node* child = (deleteNode->leftChild != NULL) ? deleteNode->leftChild : deleteNode->rightChild;
-
-    }   //End of else, the deleteNode has only one children
-}   //End of discardNode function
-
-/* remove() is a public function that requires a string as a parameter
- * It'll first check if the tree is empty
- *  -If it is empty, then it outputs an empty line
- *  -Else it'll search for a node in the tree with the given string in the parameter
- *  We call the find (string) function to get the node in the tree
- *  -If the  find() did not returned the node w/ string we looking for then output empty line
- *      as the word does not exist in the tree
- *  -If the find() returned the node w/ string we looking for then we do the following:
- *      --Update the count of that node by -1, meaning that if the count was 2 now it's 1
- *          and output the node's data and new count
- *      --If the updated count hits 0, then we call the private discardNode(node) function to
- *          remove the node from the tree and adjust the tree
- * */
 void BSTree::remove(std::string word)
 {
+    /* Remove public function, parameter(s): string
+     * Objective: Decrease count of node w/ given word, if count hits 0 then remove node from tree
+     * Cases:
+     *  1. Tree empty, output empty line
+     *  2. If node w/ given word is not in the tree output <string> : -1
+     *  3. Else the node is in the tree
+     *      A. Decrease count of the node
+     *          -If node gets to 0 then remove the node from tree
+     * */
     if (root == NULL)                       //If tree is empty
         std::cout << std::endl;             //Output empty line if tree is empty
     else                                    //Else the tree is not empty
@@ -382,9 +350,48 @@ void BSTree::remove(std::string word)
                 discardNode(searchNode);    //Remove the node from the tree by calling the discardNode private function
         }   //End of if the word is in the tree
         else                                //Else the searchNode does not have the word, the word is not in the tree
-            std::cout << std::endl;         //Output empty line as word is not in the tree
+            std::cout << word  << ": -1" << std::endl;         //Output empty line as word is not in the tree
     }   //End of else, if the tree is empty
 }   //End of remove function
+
+/* discardNode (node) is a private function called by the public remove(string) function
+ * The purpose of this function is to remove a node from the tree and adjust the tree accordingly
+ * There are three base cases:
+ *  -If the given node has
+ * */
+BSTree::Node* BSTree::discardNode(BSTree::Node *deleteNode)
+{
+    //We have three cases: deleteNode has no children, has both children, has one children
+    //Case 1: node has no children
+    if (deleteNode->leftChild == NULL && deleteNode->rightChild == NULL)
+    {
+        if (deleteNode == root) //If the deleteNode is the root of the tree
+            delete deleteNode;  //Set the root back to NULL
+        else                    //Else the deleteNode is not the root of the tree
+        {
+            //DeleteNode has a parent node
+            Node* parentNode = deleteNode->parentNode;  //Save the parent node pointer of the deleteNode
+            if (deleteNode == parentNode->leftChild)    //If the deleteNode is the LCH
+                parentNode->leftChild = NULL;   //Remove pointer to the deleteNode
+            else                                        //Else the deleteNode is the RCH
+                parentNode->rightChild = NULL;  //Remove pointer to the deleteNode
+            delete deleteNode;  //Delete deleteNode
+        }   //Else the deleteNode is not the root of the tree
+    }   //End of if the deleteNode has no children
+    //Case 2: node has both children
+    else if (deleteNode->leftChild != NULL && deleteNode->rightChild != NULL)
+    {
+
+    }   //End of else-if the delete node has both children
+    //Case 3: node has only one child
+    else
+    {
+        //Get the child that is not NULL
+        Node* child = (deleteNode->leftChild != NULL) ? deleteNode->leftChild : deleteNode->rightChild;
+
+
+    }   //End of else, the deleteNode has only one children
+}   //End of discardNode function
 
 
 void BSTree::parent(std::string word)
