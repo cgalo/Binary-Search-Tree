@@ -31,8 +31,6 @@ int main()
     }   //End of while-loop
     //We are here if 'Exit' was entered as cmd
     return 0;
-    //We are here if 'Exit' was entered as cmd
-    return 0;
 }   //End of main function
 
 void interface(std::string cmd, std::string word)

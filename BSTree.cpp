@@ -209,19 +209,26 @@ void BSTree::printTree()
 void BSTree::next(std::string word)
 {
     if (root == NULL)                  //If the tree is empty
-        std::cout << std::endl;        //Print empty line
+        std::cout << std::endl;        //Output empty line
     else                               //Else the tree is not empty
     {
-        Node* next = successor(word);
-        if (next == NULL)              //If the successor function returned NULL, as there is no successor
-            std::cout << std::endl;    //Print empty line
-        else                           //Else successor function found the successor of the word in the parameter
-            std::cout << next->data << std::endl;   //Print the successor data (word)
+        Node *findNode = find(word);    //Call find method to get the node from the tree
+        if (findNode->data == word)     //If the word was found in the tree
+        {
+            Node* successorNode = successor(findNode);
+            if (successorNode == NULL)  //If the findNode has no successor
+                std::cout << std::endl; //Output empty line
+            else                        //Else it has a successor, print successor's data
+                std::cout << successorNode->data << std::endl;
+        }   //End of if the word is in the tree
+        else                            //Else the word was not in the tree
+            std::cout << std::endl;     //Output empty line
     }   //End of else, if the tree is not empty
 }   //End of next function
 
-BSTree::Node * BSTree::successor(std::string word)
+BSTree::Node * BSTree::successor(BSTree::Node * currentNode)
 {
+    ////Call this method after checking that the word is in the tree with find()
     /* Successor private function, parameter(s): string
      * Objective: Return successor node from the node w/ the given word
      * Cases:
@@ -230,35 +237,28 @@ BSTree::Node * BSTree::successor(std::string word)
      *      B. If the node doesn't have a left child, then we return the node's RCH
      *  2. The node has no RCH, then we return the node's recent ancestor whose LCH is an ancestor of the node
      * */
-    Node* searchNode = find(word);                  //Search a node with the word in the tree
-    if (searchNode->data == word)                   //If the search found the node with the word
-    {
-        Node* currentNode = searchNode;             //Rephrasing variable
-        if (currentNode->rightChild != NULL)        //If the currentNode has a right-child (RCH)
-        {
-            currentNode = currentNode->rightChild;  //Move the current node pointer to its RCH
-            return minimum(currentNode);            //Return the left-most node of currentNode or RCH
-        }   //End of if the current node has a right-child
-        else                                        //Else the current node has no right child
-        {
-            //We have to traverse up from the current node to get the successor
-            if (currentNode == root)                //If the current node is the root of the tree
-                return NULL;                        //Output NULL as it doesn't have a parent node
-            Node* parentNode = currentNode->parentNode; //Save the current node's parent
-            // Keep traversing up until we hit the root or the current node is the LCH of its parent node
-            while (parentNode != NULL && currentNode == parentNode->rightChild)
-            {
-                if (parentNode == root) //If we got to the root of the tree
-                    break;              //Break from the while-loop as we can't keep traversing up
-                currentNode = parentNode;               //Update the current to the node above
-                parentNode = parentNode->parentNode;    //Update the parent to the node above
-            }   //End of while-loop
-            return parentNode;  //Return the parentNode as its the successor
-        }   //End of else the current node has no right child
-    }   //End of if the search found the word in the tree
-    else                                        //Else the word is not in the tree
-        return NULL;                            //Return NULL
 
+    if (currentNode->rightChild != NULL)        //If the currentNode has a right-child (RCH)
+    {
+        currentNode = currentNode->rightChild;  //Move the current node pointer to its RCH
+        return minimum(currentNode);            //Return the left-most node of currentNode or RCH
+    }   //End of if the current node has a right-child
+    else                                        //Else the current node has no right child
+    {
+        //We have to traverse up from the current node to get the successor
+        if (currentNode == root)                //If the current node is the root of the tree
+            return NULL;                        //Output NULL as it doesn't have a parent node
+        Node* parentNode = currentNode->parentNode; //Save the current node's parent
+        // Keep traversing up until we hit the root or the current node is the LCH of its parent node
+        while (parentNode != NULL && currentNode == parentNode->rightChild)
+        {
+            if (parentNode == root) //If we got to the root of the tree
+                break;              //Break from the while-loop as we can't keep traversing up
+            currentNode = parentNode;               //Update the current to the node above
+            parentNode = parentNode->parentNode;    //Update the parent to the node above
+        }   //End of while-loop
+        return parentNode;  //Return the parentNode as its the successor
+    }   //End of else the current node has no right child
 }   //End of successor function
 
 void BSTree::previous(std::string word)
@@ -275,16 +275,24 @@ void BSTree::previous(std::string word)
         std::cout << std::endl;         //Return empty line as the tree is empty
     else                                //Else the tree isn't empty
     {
-        Node* prev = predecessor(word); //Call the predecessor private method, pass the word as parameter
-        if (prev == NULL)               //If there is no predecessor, or the word wasn't found
-            std::cout << std::endl;     //Print empty line
-        else                            //Else the predecessor returned a successful node
-            std::cout << prev->data << std::endl;   //Display the node data
+        Node* findNode = find(word);    //Call the find method to get the node w/ the given word in the tree
+        if (findNode->data == word)     //If the word was found in the tree
+        {
+            Node* prev = predecessor(findNode); //Get the predecessor of the findNode
+            if (prev == NULL)                   //If the findNode has no predecessor
+                std::cout << std::endl;         //Output empty line
+            else                                //Else the findNode has a predecessor
+                std::cout << prev->data << std::endl;   //Output the predecessor's data
+        }   //End of if the word was found in the tree
+        else                            //Else the word was not in the tree
+            std::cout << std::endl;     //Output empty line
+
     }   //End of else, if the tree isn't empty
 }   //End of previous function
 
-BSTree::Node * BSTree::predecessor(std::string word)
+BSTree::Node * BSTree::predecessor(BSTree::Node * currentNode)
 {
+    ////Call this method after checking that the word is in the tree with find()
     /* Predecessor private function, parameter(s): string
      * Objective: Find a node with the given word and return the predecessor of that node
      * Cases:
@@ -293,37 +301,30 @@ BSTree::Node * BSTree::predecessor(std::string word)
      *      B. If the node doesn't have a right child, then we return the node's LCH
      *  2. The node has no LCH, then we return the node's recent ancestor whose RCH is an ancestor of the node
      * */
-    Node* searchNode = find(word);  //Call the find method to lookup the node w/ the given word
-    if (searchNode->data == word)   //If the find method found the word in the tree
-    {
-        Node* currentNode = searchNode;     //Rephrasing node pointer for easier understanding
-        if (currentNode->leftChild != NULL) //If the current node has a left-child (RCH)
-        {
-            currentNode = currentNode->leftChild;   //Move the pointer to the left-child
-            return maximum(currentNode);            //Return the right-most node of the current node
-        }   //End of if the current node has a left-child (LCH)
-        else                                //Else the current node doesn't have a LCH
-        {
-            //We are going to traverse up of the current node
-            if (currentNode == root)        //If the node is the root of the tree, then we can't go up
-                return NULL;                //Return NULL as it has no predecessor
-            else                            //Else the current node is not the root of the tree
-            {
-                Node* parentNode = currentNode->parentNode; //Get the parent of the current node
-                while (parentNode != NULL && currentNode == parentNode->leftChild)
-                {
-                    if (parentNode == root) //If we reach the root of the tree
-                        break;              //Break from the while-loop, as we can't traverse up
-                    currentNode = parentNode;               //Update the current to the node above
-                    parentNode  = parentNode->parentNode;   //Update the parent to the node above
-                }   //End of while-loop
-                return parentNode;
-            }   //End of else, if the current node is not the root of the tree
-        }   //End of else, if the current node doesn't have a LCH
 
-    }   //End of if the word is in the tree
-    else                            //Else the word is not in tree
-        return NULL;                //Return NULL as the word is no in tree
+    if (currentNode->leftChild != NULL) //If the current node has a left-child (LCH)
+    {
+        currentNode = currentNode->leftChild;   //Move the pointer to the left-child
+        return maximum(currentNode);            //Return the right-most node of the current node
+    }   //End of if the current node has a left-child (LCH)
+    else                                //Else the current node doesn't have a LCH
+    {
+        //We are going to traverse up of the current node
+        if (currentNode == root)        //If the node is the root of the tree, then we can't go up
+            return NULL;                //Return NULL as it has no predecessor
+        else                            //Else the current node is not the root of the tree
+        {
+            Node* parentNode = currentNode->parentNode; //Get the parent of the current node
+            while (parentNode != NULL && currentNode == parentNode->leftChild)
+            {
+                if (parentNode == root) //If we reach the root of the tree
+                    break;              //Break from the while-loop, as we can't traverse up
+                currentNode = parentNode;               //Update the current to the node above
+                parentNode  = parentNode->parentNode;   //Update the parent to the node above
+            }   //End of while-loop
+            return parentNode;
+        }   //End of else, if the current node is not the root of the tree
+    }   //End of else, if the current node doesn't have a LCH
 }   //End of predecessor function
 
 void BSTree::remove(std::string word)
@@ -345,7 +346,7 @@ void BSTree::remove(std::string word)
         if (searchNode->data == word)       //If the word is in the tree, search() found it in the tree
         {
             searchNode->count--;            //Update the count word
-            std::cout << searchNode->count << ": " << searchNode->count << std::endl;   //Output node info
+            std::cout << searchNode->data << ": " << searchNode->count << std::endl;   //Output node info
             if (searchNode->count == 0)     //If the node count gets to 0
                 discardNode(searchNode);    //Remove the node from the tree by calling the discardNode private function
         }   //End of if the word is in the tree
@@ -366,7 +367,10 @@ BSTree::Node* BSTree::discardNode(BSTree::Node *deleteNode)
     if (deleteNode->leftChild == NULL && deleteNode->rightChild == NULL)
     {
         if (deleteNode == root) //If the deleteNode is the root of the tree
-            delete deleteNode;  //Set the root back to NULL
+        {
+            root = NULL;        //Set the root pointer back to NULL
+            delete deleteNode;  //Perform Garbage Collection (GC) to get that memory back
+        }   //End of if the deleteNode is the root of the tree
         else                    //Else the deleteNode is not the root of the tree
         {
             //DeleteNode has a parent node
@@ -375,22 +379,43 @@ BSTree::Node* BSTree::discardNode(BSTree::Node *deleteNode)
                 parentNode->leftChild = NULL;   //Remove pointer to the deleteNode
             else                                        //Else the deleteNode is the RCH
                 parentNode->rightChild = NULL;  //Remove pointer to the deleteNode
-            delete deleteNode;  //Delete deleteNode
+            delete deleteNode;  //GC to get the memory back from the deleteNode
         }   //Else the deleteNode is not the root of the tree
     }   //End of if the deleteNode has no children
     //Case 2: node has both children
     else if (deleteNode->leftChild != NULL && deleteNode->rightChild != NULL)
     {
-
+        //First get the successor node from the deleteNode
+        Node* succesorNode = successor(deleteNode);
     }   //End of else-if the delete node has both children
     //Case 3: node has only one child
     else
     {
         //Get the child that is not NULL
         Node* child = (deleteNode->leftChild != NULL) ? deleteNode->leftChild : deleteNode->rightChild;
-
-
+        if (deleteNode == root) //If the deleteNode is the root of the tree
+        {
+            //Make the child node the new root
+            child->parentNode = NULL;  //Set reference to parent node to null as root shouldn't have a parent
+            root = child;               //Set the child as new root of the tree
+        }   //End of if the deleteNode is the root
+        else                    //Else the deleteNode is not the root of the tree, deleteNode has a parent
+        {
+            Node* parentNode = deleteNode->parentNode;  //Get the parent node of the node we are going to delete
+            //Now remove pointer to the deleteNode and set the new pointer to the deleteNode's child
+            if (parentNode->leftChild == deleteNode)    //If the removeNode is the left child of its parent
+                parentNode->leftChild = child;          //Set the child node as parentNode's new LCH
+            else                                        //Else the removeNode is the right-child of the parent
+                parentNode->rightChild = child;         //Set the child not as parentNode's new RCH
+        }   //End of else, if the deleteNode is not the root
+        delete deleteNode;                              //Perform garbage collection on the deleteNode
     }   //End of else, the deleteNode has only one children
+
+    ////Following is just for debugging purposes
+    if (root != NULL)
+        std::cout << "root: " << root->data << std::endl;
+    ////
+    //// DELETE THISSSSSS BEFORE SUBMITTING!!
 }   //End of discardNode function
 
 

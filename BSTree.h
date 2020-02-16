@@ -13,10 +13,10 @@ private:
     struct Node
     {
         std::string data;                           //Word stored in the node
-        int count;                                  //Frequency of the occurrence
-        Node *leftChild, *rightChild, *parentNode;  //Reference node, to the node's parent and children
+        int count;                                  //Frequency of the occurrence of the word
+        Node *leftChild, *rightChild, *parentNode;  //Reference nodes, to the node's parent and children
 
-        Node(std::string word)  //Constructor given a word
+        Node(std::string word)  //Constructor given a string
         {
             data = word;
             count = 1;
@@ -29,10 +29,9 @@ private:
     Node* maximum       (Node* currentNode);
     Node* minimum       (Node* currentNode);
     void inOrderPrint   (Node* currentNode);
-    Node* successor     (std::string word);
-    Node* predecessor   (std::string word);
+    Node* successor     (Node* currentNode);
+    Node* predecessor   (Node* currentNode);
     Node* discardNode   (Node* deleteNode);
-   // void transplant     (Node* u, Node* v);     //Helper function that will move subtree, called by discardNode()
     ////The following method should never be called besides by the destructor -> ~BST()
     void treeDestructor (Node* currentNode);    //Traverses the tree to destroy every node in the tree
 
