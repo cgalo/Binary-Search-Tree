@@ -351,7 +351,7 @@ void BSTree::remove(std::string word)
                 discardNode(searchNode);    //Remove the node from the tree by calling the discardNode private function
         }   //End of if the word is in the tree
         else                                //Else the searchNode does not have the word, the word is not in the tree
-            std::cout << word  << ": -1" << std::endl;         //Output empty line as word is not in the tree
+            std::cout << word  << ": -1" << std::endl;  //Output <word> with -1 count
     }   //End of else, if the tree is empty
 }   //End of remove function
 
@@ -367,10 +367,7 @@ BSTree::Node* BSTree::discardNode(BSTree::Node *deleteNode)
     if (deleteNode->leftChild == NULL && deleteNode->rightChild == NULL)
     {
         if (deleteNode == root) //If the deleteNode is the root of the tree
-        {
             root = NULL;        //Set the root pointer back to NULL
-            delete deleteNode;  //Perform Garbage Collection (GC) to get that memory back
-        }   //End of if the deleteNode is the root of the tree
         else                    //Else the deleteNode is not the root of the tree
         {
             //DeleteNode has a parent node
@@ -379,14 +376,54 @@ BSTree::Node* BSTree::discardNode(BSTree::Node *deleteNode)
                 parentNode->leftChild = NULL;   //Remove pointer to the deleteNode
             else                                        //Else the deleteNode is the RCH
                 parentNode->rightChild = NULL;  //Remove pointer to the deleteNode
-            delete deleteNode;  //GC to get the memory back from the deleteNode
         }   //Else the deleteNode is not the root of the tree
+        delete deleteNode;  //GC to get the memory back from the deleteNode
     }   //End of if the deleteNode has no children
     //Case 2: node has both children
     else if (deleteNode->leftChild != NULL && deleteNode->rightChild != NULL)
     {
-        //First get the successor node from the deleteNode
-        Node* succesorNode = successor(deleteNode);
+        Node* succNode = successor(deleteNode); //Get the successor node of the deleteNode
+        //succNode has no LCH as it is the left-most node, it's either deleteNode's RCH or LCH of the RCH's
+        if (deleteNode->rightChild == succNode) //If the succNode is the right-child (RCH) of the deleteNode
+        {
+            //If the deleteNode has a parent, then replace the child pointer to the deleteNode with the succNode
+            if (deleteNode->parentNode != NULL)             //If the deleteNode has a parent, aka not the root
+            {
+                Node* parentNode = deleteNode->parentNode;  //Save the deleteNode's parent pointer
+                succNode->parentNode = parentNode;          //Set the parent of succNode to deleteNode's parent
+                if (parentNode->leftChild == deleteNode)    //If the deleteNode is a LCH
+                    parentNode->leftChild = succNode;       //Set the succNode as its new LCH for the parent
+                else                                        //Else the deleteNode is the RCH
+                    parentNode->rightChild = succNode;      //Set the succNode as its new RCH for the parent
+            }   //If the deleteNode has a parent, aka it's not the root of the tree
+            else                                            //Else the deleteNode is the root of the tree
+                root = succNode;                            //Set root pointer to the succNode
+            //Now readjust the deleteNode's left-child (LCH) pointer
+            succNode->leftChild = deleteNode->leftChild;    //Set succNode's LCH to the deleteNode's LCH
+            succNode->leftChild->parentNode = succNode;     //Change the LCH parent pointer to the succNode
+            delete deleteNode;
+        }   //End of if the succNode is deleteNode's right-child (RCH)
+        else                                    //Else the succNode is a LCH of the deleteNode's RCH
+        {
+            //First we unlink the succNode to its parent node
+            Node* parentNode = succNode->parentNode;        //Save the pointer to the succNode's parent
+            //Now change the parentNode's LCH to point to succNode's RCH
+            parentNode->leftChild = succNode->rightChild;   //Change the parent LCH's pointer to succNode's RCH
+            if (succNode->rightChild != NULL)               //If the succNode's RCH is not null
+                succNode->rightChild->parentNode = parentNode;  //Change the RCH's parent pointer to succNode's parent
+            //Finished unlinking on the bottom of the tree, now link the succNode to where the deleteNode is located
+            ////Continue coding here, now we need to move the succNode up and remove the deleteNode
+            succNode->parentNode->leftChild = succNode->rightChild;
+            if (succNode->rightChild != NULL)
+                succNode->rightChild->parentNode = succNode->parentNode;
+            if (deleteNode->parentNode != NULL) //If the deleteNode has a parent, aka it's not the root
+            {
+                Node* parentNode = deleteNode->parentNode;  //Save the pointer to the deleteNode's parent
+
+            }   //End of if the deleteNode has a parent, aka it's not the root of the tree
+            else
+                root = succNode;
+        }   //End of else, if the succNode is the left-most children of the deleteNode's RCH
     }   //End of else-if the delete node has both children
     //Case 3: node has only one child
     else
@@ -416,6 +453,7 @@ BSTree::Node* BSTree::discardNode(BSTree::Node *deleteNode)
         std::cout << "root: " << root->data << std::endl;
     ////
     //// DELETE THISSSSSS BEFORE SUBMITTING!!
+    ////
 }   //End of discardNode function
 
 
