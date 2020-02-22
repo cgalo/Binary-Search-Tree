@@ -23,7 +23,7 @@ private:
             parentNode = leftChild = rightChild = NULL;
         }   //End of constructor
     };  //End of Node struct
-    Node* root; //Root, or beginning, of the tree
+    Node* root = NULL; //Root, or beginning, of the tree
     Node* find          (std::string word); //Looks for node w/ word in the tree, returns node or parent node
     Node* insertion     (std::string word); //
     Node* maximum       (Node* currentNode);

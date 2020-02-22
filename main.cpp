@@ -2,15 +2,17 @@
 #include <string>
 #include "BSTree.h" //Call the BST header file
 
-BSTree tree;        //Initiate the BSTree
+
 void interface      (std::string cmd, std::string word);    //Declaring the menu function
 void toUpper        (std::string* word);                    //Declaring the toUpper function
 std::string getWord (std::string line, int wordIndex);      //Declaring getWord function
 bool checkWord      (std::string word);                     //Declaring checkWord function
 void showHelp       ();                                     //Declaring showHelp function
 
+BSTree tree;    //Initiate a the tree
 int main()
 {
+
     while (true)
     {
         std::string input;  //Create string to accept the input of the user
