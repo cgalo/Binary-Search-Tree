@@ -10,6 +10,7 @@
 BSTree::BSTree()
 {
     root = NULL;                //Set the root of the tree to initialize as NULL
+    nodeCount = 0;              //Set the nodeCount to 0
 }   //End of constructor
 
 //Destructor for BSTree object
@@ -191,7 +192,11 @@ void BSTree::printTree()
     if (root == NULL)                   //If the tree is empty
         std::cout << std::endl;         //Print empty line
     else                                //Else the tree is not empty
-        inOrderPrint(root, 0); //Call the inOrderPrint function to prin the tree's nodes in-order traversal
+    {
+        nodeCount = 1;                  //Set the nodeCount to 1, as it is the min nodes in the tree
+        inOrderPrint(root);             //Call the inOrderPrint function to prin the tree's nodes in-order traversal
+        std::cout << std::endl;         //Empty line
+    }
 }   //End of printTree function
 
 
@@ -199,20 +204,24 @@ void BSTree::printTree()
  *  It utilizes recursion to traverse the tree
  *  It is called only by the printTree() public function
  * */
-void BSTree::inOrderPrint(BSTree::Node *currentNode, int count)
+void BSTree::inOrderPrint(BSTree::Node *currentNode)
 {
     if (currentNode == NULL)    //If we reach a leaf
         return;                 //Exit
-    inOrderPrint(currentNode->leftChild, count);   //Traverse through the left side
-    count++;
 
-    if (count > 1)
-        std::cout << ", (" << count << ")" << currentNode->data << " " << currentNode->count;
-    else
+    inOrderPrint(currentNode->leftChild);   //Traverse through the left side
+    //Now output the node, display the position of the node, data, and count of node:
+    //  Format: (n) <string> <count>
+    if (nodeCount > 1)                      //If its not the first node in the tree
+        std::cout << ", (" << nodeCount << ") " << currentNode->data << " " << currentNode->count;
+    else                                    //If it's the first node in the tree
+    {
+        std::cout << "Set contains: ";
         std::cout << "(1)" << currentNode->data << " " << currentNode->count;
-
+    }
+    nodeCount++;    //Update the total of nodes in the tree
     //count++;
-    inOrderPrint(currentNode->rightChild, count);  //Traverse through the right side
+    inOrderPrint(currentNode->rightChild);  //Traverse through the right side
 
 }   //End of inOrderPrint function
 

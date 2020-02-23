@@ -23,12 +23,13 @@ private:
             parentNode = leftChild = rightChild = NULL;
         }   //End of constructor
     };  //End of Node struct
-    Node* root = NULL; //Root, or beginning, of the tree
+    Node* root = NULL;  //Root, or beginning, of the tree
+    int nodeCount;     //Keep track of the count of nodes in the tree, will be populated by the inOrderPrint method
     Node* find          (std::string word); //Looks for node w/ word in the tree, returns node or parent node
     Node* insertion     (std::string word); //
     Node* maximum       (Node* currentNode);
     Node* minimum       (Node* currentNode);
-    void inOrderPrint   (Node* currentNode, int count);
+    void inOrderPrint   (Node* currentNode);
     Node* successor     (Node* currentNode);
     Node* predecessor   (Node* currentNode);
     Node* discardNode   (Node* deleteNode);
