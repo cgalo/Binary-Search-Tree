@@ -28,7 +28,7 @@ private:
     Node* insertion     (std::string word); //
     Node* maximum       (Node* currentNode);
     Node* minimum       (Node* currentNode);
-    void inOrderPrint   (Node* currentNode);
+    void inOrderPrint   (Node* currentNode, int count);
     Node* successor     (Node* currentNode);
     Node* predecessor   (Node* currentNode);
     Node* discardNode   (Node* deleteNode);

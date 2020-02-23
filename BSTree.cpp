@@ -183,18 +183,6 @@ void BSTree::min()
     }   //End of else, if the tree is not empty
 }   //End of min function
 
-/* inOrderPrint private function, prints in-order traversal node's data and count tree
- *  It utilizes recursion to traverse the tree
- *  It is called only by the printTree() public function
- * */
-void BSTree::inOrderPrint(BSTree::Node *currentNode)
-{
-    if (currentNode == NULL)    //If we reach a leaf
-        return;                 //Exit
-    inOrderPrint(currentNode->leftChild);   //Traverse through the left side
-    std::cout << currentNode->data << ": " << currentNode->count << std::endl;  //Print node's data and count
-    inOrderPrint(currentNode->rightChild);  //Traverse through the right side
-}   //End of inOrderPrint function
 
 /* printTree()
  * */
@@ -203,8 +191,30 @@ void BSTree::printTree()
     if (root == NULL)                   //If the tree is empty
         std::cout << std::endl;         //Print empty line
     else                                //Else the tree is not empty
-        inOrderPrint(root); //Call the inOrderPrint function to prin the tree's nodes in-order traversal
+        inOrderPrint(root, 0); //Call the inOrderPrint function to prin the tree's nodes in-order traversal
 }   //End of printTree function
+
+
+/* inOrderPrint private function, prints in-order traversal node's data and count tree
+ *  It utilizes recursion to traverse the tree
+ *  It is called only by the printTree() public function
+ * */
+void BSTree::inOrderPrint(BSTree::Node *currentNode, int count)
+{
+    if (currentNode == NULL)    //If we reach a leaf
+        return;                 //Exit
+    inOrderPrint(currentNode->leftChild, count);   //Traverse through the left side
+    count++;
+
+    if (count > 1)
+        std::cout << ", (" << count << ")" << currentNode->data << " " << currentNode->count;
+    else
+        std::cout << "(1)" << currentNode->data << " " << currentNode->count;
+
+    //count++;
+    inOrderPrint(currentNode->rightChild, count);  //Traverse through the right side
+
+}   //End of inOrderPrint function
 
 void BSTree::next(std::string word)
 {
