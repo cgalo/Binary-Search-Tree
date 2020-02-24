@@ -6,9 +6,11 @@
 #include "BSTree.h"
 #include <iostream> //For cout and endl
 
-//BSTree basic constructor
 BSTree::BSTree()
 {
+    /* BST public constructor, parameter(s): none
+     * Objective: Initialize the tree object by setting the root to null and count to 0
+     * */
     root = NULL;                //Set the root of the tree to initialize as NULL
     nodeCount = 0;              //Set the nodeCount to 0
 }   //End of constructor
@@ -17,33 +19,40 @@ BSTree::BSTree()
 //  -Goes through the tree and deletes all nodes in the tree
 BSTree::~BSTree()
 {
+    /* ~BST public destructor, parameter(s): None
+     * Objective: delete all nodes in the tree
+     * */
     if (root != NULL)           //If the tree is not empty
+    {
         treeDestructor(root);   //Traverse and destroy
+        root = NULL;            //Set the root pointer to NULL
+    }
+    nodeCount = 0;              //Set the node count back to 0
 }   //End of destructor function
 
-/* treeDestructor, needs a node in the parameter as it is a recursive function
- *  it doesn't return anything, but deletes all the nodes in the tree for us
- * */
-////This function should be only called by the destructor ~BST() after checking that tree is not empty
 void BSTree::treeDestructor(BSTree::Node *currentNode)
 {
+    /* treeDestructor private method, parameter(s): node pointer
+     * Objective: recurse through the tree and delete all nodes in the tree
+     * Warning: ONLY call this method from the destructor -> ~BST()
+     */
     if (currentNode != NULL)
     {
         treeDestructor(currentNode->leftChild);
-        currentNode = currentNode->leftChild;
         treeDestructor(currentNode->rightChild);
-        currentNode = currentNode->rightChild;
         delete currentNode;
     }   //End of if the currentNode is not NULL
 }   //End of treeDestructor function
 
-//Find function, returns a node struct
-//  -Searches the tree to find the node holding the word in the parameter. Two cases to return:
-//  1. If tree holds the node with the given word, it'll return that node
-//  2. Else returns the parent node of where we should insert the new node
-////ONLY call this function after checking if the root is not null
 BSTree::Node * BSTree::find(std::string word)
 {
+    ////ONLY call this function after checking if the root is not null
+    /* find private method, parameter(s): string <word>
+     * Objective: Return node with the given word
+     * Cases:
+     *  1. Traverse the tree, we found the word, return the node that has that word
+     *  2. Word was not found in tree, return what would be the parent node of the word
+     *  */
     Node* currentNode = root;   //Start from the root of the tree and we work ourselves down
     Node* parentNode  = NULL;   //This will be returned if we do not find the word in the tree
     while (currentNode != NULL) //Traverse until we hit a leaf in the tree
@@ -66,10 +75,16 @@ BSTree::Node * BSTree::find(std::string word)
     return parentNode;  //Return parentNode
 }   //End of find function, returns struct Node
 
-//Search function
-//  -Calls find function and checks the result, prints information in the node
 void BSTree::search(std::string word)
 {
+    /* search public function, parameter(s): string <word>
+     * Objective: Search for the node in the tree that has the word, output the node's count and data
+     * Cases:
+     *  1. Tree is empty, output <word> with 0 count
+     *  2. Tree is not empty, search the word in the tree
+     *      A. Word was found, output that node's data & count
+     *      B. Word was not found, output <word> with 0 count
+     * */
     if (root == NULL)                   //If the tree is empty
         std::cout << word << ": " << 0 << std::endl;    //Output word and 0 count
     else                                //Else the tree is not empty
@@ -86,12 +101,14 @@ void BSTree::search(std::string word)
     }   //End of else, if the tree is not empty
 }   //End of search function
 
-//Insert function - private function, only called by the insert() public function
-//  -Uses find function to check if the tree contains the word we are looking for
-//      -- If we find the node, we update the count by adding +1 and returning this node
-//      -- Else we insert the new Node as a child of the returned result of the find function, we return the new node
 BSTree::Node * BSTree::insertion(std::string word)
 {
+    /* insertion private function, paramter(s): string <word>
+     * Objective: Insert node with given word in the tree, if the node exists then add +1 to the count of that node
+     * Cases:
+     *  1. Node w/ given word exists, we add +1 to the count and return it
+     *  2. Node does not exist in the tree, insert the node in the tree
+     *  */
     if (root == NULL)   //If the tree is empty, we insert node as root
     {
         root = new Node(word);
@@ -123,12 +140,10 @@ BSTree::Node * BSTree::insertion(std::string word)
     }   //End of else, if the the tree is not empty
 }   //End of insertion
 
-//Insert function - it is public function
-//  Calls the insertion() private function by passing the string and getting back a node.
-//  This node is either an existing node in the tree, with a count > 1 or a new node with count == 1
-//  It displays the data in the node with the count
 void BSTree::insert(std::string word)
 {
+    /* insert public method, parameter(s): string <word>
+     * Objective: Call the insertNode method, output the result node's data & count*/
     Node* insertNode = insertion(word);
     std::cout << insertNode->data << ": " << insertNode->count << std::endl;
 }   //End of insert function
@@ -152,43 +167,50 @@ void BSTree::max()
 
 BSTree::Node * BSTree::maximum(BSTree::Node * currentNode)
 {
+    /* maximum private method, parameter(s): Node pointer
+     * Objective: Return the right-most node of the given node
+     * */
     while (currentNode->rightChild != NULL)     //Traverse the right side of the tree
         currentNode = currentNode->rightChild;  //Keep moving until the right-most node
     return currentNode;                         //Return the right-most node
 }   //End of maximum function
 
-/* Minimum private function, requires to be passed a node pointer
- *  This function traverses to the left-most child of the given tree
- *  - If the given node has not child then it will return the given node
- * */
 BSTree::Node * BSTree::minimum(BSTree::Node *currentNode)
 {
+    /* minimum private method, parameter(s): node pointer
+     * Objective: traverse to the right-most node of the given node in the parameter
+     * */
     while (currentNode->leftChild != NULL)      //Traverse the left side of the tree
         currentNode = currentNode->leftChild;   //Keep moving until the left-most node
     return currentNode;                         //Return the left-most node
 }   //End of minimum function
 
-/* Min public function, displays the left-most node'data and count of the tree
- *  This function does not require any parameters
- *  -If the tree is empty, if it is then it will output an empty line
- *  -Else it will call the minimum() private function, and output the returned node's data and count
- * */
 void BSTree::min()
 {
+    /* min public function, parameter(s): none
+     * Objective: Output the right-most node in the tree
+     * Cases:
+     *  1. Tree is empty, print empty line
+     *  2. Tree is not empty, call the minimum method, passing the root pointer, and output the result
+     * */
     if (root == NULL)                           //First we check if the tree is empty
         std::cout << std::endl;                 //Print empty line
     else                                        //Else the tree is not empty
     {
-        Node* min = minimum(root);              //Call the minimum function to traverse left of the tree
+        Node* min = minimum(root);              //Call the minimum function to traverse left of the root node
         std::cout << min->data << std::endl;    //Print the min node data
     }   //End of else, if the tree is not empty
 }   //End of min function
 
-
-/* printTree()
- * */
 void BSTree::printTree()
 {
+    /*
+     * printTree public method, parameter(s): None
+     * Objective: Print the nodes in the tree
+     * Cases:
+     *  1. Tree is empty, output empty line
+     *  2. Tree is not empty, call inOrderPrint, passing the root pointer, inOrder traversal
+     * */
     if (root == NULL)                   //If the tree is empty
         std::cout << std::endl;         //Print empty line
     else                                //Else the tree is not empty
@@ -199,16 +221,16 @@ void BSTree::printTree()
     }
 }   //End of printTree function
 
-
-/* inOrderPrint private function, prints in-order traversal node's data and count tree
- *  It utilizes recursion to traverse the tree
- *  It is called only by the printTree() public function
- * */
 void BSTree::inOrderPrint(BSTree::Node *currentNode)
 {
+    /*
+     * inOrderPrint private method, parameter(s): node pointer
+     * Objective: Recurse through the tree and print nodes in-order
+     * * It is called by the printTree() public method
+     * */
+
     if (currentNode == NULL)    //If we reach a leaf
         return;                 //Exit
-
     inOrderPrint(currentNode->leftChild);   //Traverse through the left side
     //Now output the node, display the position of the node, data, and count of node:
     //  Format: (n) <string> <count>
@@ -374,14 +396,17 @@ void BSTree::remove(std::string word)
     }   //End of else, if the tree is empty
 }   //End of remove function
 
-/* discardNode (node) is a private function called by the public remove(string) function
- * The purpose of this function is to remove a node from the tree and adjust the tree accordingly
- * There are three base cases:
- *  -If the given node has
- * */
 BSTree::Node* BSTree::discardNode(BSTree::Node *deleteNode)
 {
-    //We have three cases: deleteNode has no children, has both children, has one children
+    /*
+     * discardNode private method, parameter(s): node pointer
+     * Objective: Remove the node from the tree and perform garbage collection (GC) to collect the memory back
+     * Cases:
+     *  1. Node has no children
+     *  2. Node has both children
+     *  3. Node has only one children
+     * */
+
     //Case 1: node has no children
     if (deleteNode->leftChild == NULL && deleteNode->rightChild == NULL)
     {
@@ -482,7 +507,6 @@ BSTree::Node* BSTree::discardNode(BSTree::Node *deleteNode)
     }   //End of else, the deleteNode has only one children
 }   //End of discardNode function
 
-
 void BSTree::parent(std::string word)
 {
     /* Parent public function, parameter(s): string
@@ -511,7 +535,6 @@ void BSTree::parent(std::string word)
 
     }   //End of else, if the tree is not empty
 }   //End of parent function
-
 
 void BSTree::children(std::string word)
 {
