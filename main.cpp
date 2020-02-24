@@ -3,16 +3,16 @@
 #include "BSTree.h" //Call the BST header file
 
 
-void interface      (std::string cmd, std::string word);    //Declaring the menu function
+void interface      (std::string cmd, std::string word, BSTree * tree);    //Declaring the menu function
 void toUpper        (std::string* word);                    //Declaring the toUpper function
 std::string getWord (std::string line, int wordIndex);      //Declaring getWord function
 bool checkWord      (std::string word);                     //Declaring checkWord function
 void showHelp       ();                                     //Declaring showHelp function
 
-BSTree tree;    //Initiate a the tree
+//BSTree tree;    //Initiate a the tree
 int main()
 {
-
+    BSTree *tree = new BSTree;
     while (true)
     {
         std::string input;  //Create string to accept the input of the user
@@ -28,14 +28,14 @@ int main()
         {
             std::string word = getWord (input, 2);//Get the second word of the input
             //Now we can call the menu and check the input
-            interface(cmd, word);
+            interface(cmd, word, tree);
         }
     }   //End of while-loop
     //We are here if 'Exit' was entered as cmd
     return 0;
 }   //End of main function
 
-void interface(std::string cmd, std::string word)
+void interface(std::string cmd, std::string word, BSTree* tree)
 {
     //Check if the user input a word with the cmd
     bool wordCheck = checkWord(word);
@@ -45,36 +45,36 @@ void interface(std::string cmd, std::string word)
         if (wordCheck == false)                 //If the user did not input a word to insert with the cmd
             std::cout << std::endl;             //Print empty line, do not insert
         else                                    //Else the user did provide a word to insert with the cmd
-            tree.insert(word);                  //Insert the provided word to the BST
+            tree->insert(word);                  //Insert the provided word to the BST
     }   //End of if the cmd == "INSERT"
     else if (cmd == "DELETE")                   //Else if the cmd is delete
     {
         if (wordCheck == false)                 //If the user did not input a second word
             std::cout << std::endl;             //Output empty line, as we need a word w/ the cmd
         else                                    //Else user input a cmd w/ a word
-            tree.remove(word);                  //We call the tree's remove method and pass the word given
+            tree->remove(word);                  //We call the tree's remove method and pass the word given
     }   //End of else-if cmd == "DELETE"
     else if (cmd == "SEARCH")                   //Else if the cmd is search
     {
         if (wordCheck == false)                 //If the user did not input a word
             std::cout << std::endl;
         else                                    //Else the user input a word
-            tree.search(word);                  //Call the tree's search function
+            tree->search(word);                  //Call the tree's search function
     }   //End of else-if cmd == "SEARCH"
     else if (cmd == "MIN")                      //Else if the cmd is min
     {
-        tree.min();                             //Call the min method in the tree
+        tree->min();                             //Call the min method in the tree
     }   //End of else-if cmd == "MIN"
     else if (cmd == "MAX")                      //Else if the cmd is max
     {
-        tree.max();                             //Call the max method of the tree, we do not need a word w/ the cmd
+        tree->max();                             //Call the max method of the tree, we do not need a word w/ the cmd
     }   //End of else-if cmd == "MAX"
     else if (cmd == "NEXT")
     {
         if (wordCheck == false)                 //If the user did not input a second word
             std::cout << std::endl;
         else
-            tree.next(word);
+            tree->next(word);
 
     }   //End of else-if cmd == "NEXT"
     else if (cmd == "PREV")
@@ -82,25 +82,25 @@ void interface(std::string cmd, std::string word)
         if (wordCheck == false)
             std::cout << std::endl;
         else
-            tree.previous(word);
+            tree->previous(word);
     }   //End of else-if cmd == "PREV"
     else  if (cmd == "PARENT")
     {
         if(wordCheck == false)                //If the user did not provide a string with the cmd
             std::cout << std::endl;           //Output an empty line
         else
-            tree.parent(word);                //Call the parent method of the tree
+            tree->parent(word);                //Call the parent method of the tree
     }   //End of else-if cmd == "PARENT"
     else if (cmd == "CHILD")
     {
         if (wordCheck == false)               //If the user did not provide a word w/ the cmd
             std::cout << std::endl;           //Output empty line
         else                                  //Else the user did provide a word w/ the cmd
-            tree.children(word);              //Call the children function from the tree
+            tree->children(word);              //Call the children function from the tree
     }   //End of else-if cmd == "CHILD"
     else if (cmd == "LIST")
     {
-        tree.printTree();       //Prints in-order traversal of the tree node's, outputs all the node's data and count
+        tree->printTree();       //Prints in-order traversal of the tree node's, outputs all the node's data and count
     }   //End of else-if cmd == "LIST
     else if (cmd == "HELP")
     {
@@ -121,7 +121,13 @@ void toUpper (std::string* word)
 
 std::string getWord (std::string line, int wordIndex)
 {
-
+    /*
+     * getWord function, parameter(s): string, int
+     * Objective: Get the word from the given string of the position given (int)
+     * Cases:
+     *  1. If the string has the position of the word then return the word
+     *  2. The string doesn't have a word in the requested index, return string "wordIndex error"
+     * */
     int countWord = 0;      //Will be used the keep tracks of the amount of words read in the string
     std::string returnWord; //To store the word and return it
     for (int i = 0 ; i < line.length(); i++)            //Iterate through the string char by char
@@ -135,7 +141,7 @@ std::string getWord (std::string line, int wordIndex)
                 {
                     if (i == line.length() - 1)
                     {
-                        returnWord += line [i];
+                        returnWord += line [i];                 //Append the current character to the returnWord string
                     }
                     return returnWord; // yes it was, so return it
                 }   //End of if
@@ -150,6 +156,13 @@ std::string getWord (std::string line, int wordIndex)
 
 bool checkWord (std::string word)
 {
+    /*
+     * checkWord function is called every time a user enters a cmd
+     * Objective: check if the user entered two strings in the input
+     * Cases:
+     *  -If string is "wordIndex error" then the user only entered one word
+     *  -Else the user entered a string/word and a command
+     * */
     if (word == "wordIndex error")  //If the user did not provide another word with the cmd
         return false;               //Return false
     else                            //Else the user did input a cmd with a word
@@ -158,6 +171,10 @@ bool checkWord (std::string word)
 
 void showHelp()
 {
+    /*
+     * showHelp function is called within the interface function, specifically when cmd == "HELP"
+     * Objective: Display/output the commands available for the program
+     * */
     std::cout << "insert <string>"  << std::endl;
     std::cout << "delete <string>"  << std::endl;
     std::cout << "search <string>"  << std::endl;
