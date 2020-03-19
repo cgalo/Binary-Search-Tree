@@ -1,7 +1,7 @@
 # Binary Search Tree
 This project attempts to implement the seven Dynamic Set Operators using a Binary Search Tree (BST). 
 
-#### Node
+#### Node Structure
 
 The node for this BSTree has the following information:
 
